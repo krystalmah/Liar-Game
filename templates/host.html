@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Host Game</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href='https://fonts.googleapis.com/css?family=Pixelify+Sans' rel='stylesheet'>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(62deg, #83f8ec, #b681fa, #f56091, #f3f86f);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    font-family: sans-serif;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .content {
+  background-color: rgba(225, 225, 225, 0.6);
+  backdrop-filter: blur(30px);
+  max-height: 90vh; 
+  width: 90vw;
+  padding: 20px;
+  border-radius: 20px;
+  overflow-y: auto; 
+}
+
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  h1 {
+    color: black;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 2.5rem;
+    text-align: center;
+  }
+
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 5px 0;
+  }
+
+  button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #a259ff, #f73777);
+    color: white;
+    height: 60px;
+    min-width: 150px;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+
+  button:hover {
+    background: linear-gradient(135deg, #f5ff00, #00ffe7);
+    color: black;
+  }
+
+  .game-id {
+    font-size: 18px;
+    font-family: 'Segoe UI', sans-serif;
+    color: #000000;
+    margin-top: 5px;
+  }
+
+  #player-list {
+    font-size: 18px;
+    color: black;
+    font-family: 'Pixelify Sans', sans-serif;
+    list-style: none;
+    padding-left: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+  }
+
+  #player-list li {
+    margin: 5px 0;
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 2rem;
+    }
+
+    button {
+      height: auto;
+      padding: 10px 15px;
+      font-size: 16px;
+    }
+
+    .content {
+      width: 95%;
+      padding: 15px;
+    }
+
+    .game-id {
+      font-size: 16px;
+    }
+
+    #player-list {
+      font-size: 16px;
+    }
+  }
+
+
+</style>
+<body>
+    <div class="content">
+    <div class="center">
+      <h1>✨Host✨</h1>
+
+      <div class="button-row">
+        <button onclick="createGame()">Create Game</button>
+        <p id="gameID" class="game-id">Game ID: </p>
+      </div>
+
+      <div class="button-row">
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="nextGame()">Next Game</button>
+        <button onclick="endGame()">End Game</button>
+      </div>
+
+      <ul id="player-list"></ul>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+    let gameID = '';
+
+    function createGame() {
+      socket.emit('create_game', {});
+    }
+
+    socket.on('game_created', (data) => {
+      gameID = data.game_id;
+      document.getElementById('gameID').innerText = "Game ID: " + gameID;
+    });
+
+    function startGame() {
+      socket.emit('start_game', { game_id: gameID });
+    }
+
+    function nextGame() {
+      socket.emit('next_game', { game_id: gameID });
+    }
+
+    function endGame() {
+      socket.emit('end_game', { game_id: gameID });
+    }
+
+    socket.on('update_player_list', (data) => {
+      const li = document.createElement('li');
+      li.innerText = data.player_name;
+      document.getElementById('player-list').appendChild(li);
+    });
+  </script>
+</body>
+</html>

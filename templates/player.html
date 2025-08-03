@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href='https://fonts.googleapis.com/css?family=Pixelify+Sans' rel='stylesheet'>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player</title>
+    <style>
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: linear-gradient(62deg, #00ffe7, #a259ff, #f73777, #f5ff00);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.content {
+  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  padding: 25px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-family: 'Pixelify Sans', sans-serif;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+input {
+  background-color: #f9e6f6;
+  border: none;
+  border-radius: 5px;
+  height: 40px;
+  padding: 10px;
+  box-shadow: 0 0 10px #a259ff;
+  font-size: 16px;
+  width: 45%;
+  min-width: 140px;
+  flex: 1 1 45%;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 15px #a259ff;
+}
+
+#join, #lb {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #a259ff, #f73777);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+  font-family: 'Pixelify Sans', sans-serif;
+}
+
+#join:hover, #lb:hover {
+  background: linear-gradient(135deg, #f5ff00, #00ffe7);
+  color: black;
+}
+
+.ans {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#status-message {
+  font-size: 18px;
+  margin-top: 15px;
+  text-align: center;
+  color: black;
+  font-family: 'Pixelify Sans', sans-serif;
+}
+
+#l {
+  background-color: rgb(247, 50, 50);
+  padding: 12px 30px;
+  border: none;
+  border-radius: 5px;
+  width: 80%;
+  color: white;
+  box-shadow: 0px 0px 20px rgb(251, 147, 147);
+}
+
+#w {
+  background-color: rgb(5, 246, 5);
+  padding: 12px 30px;
+  border: none;
+  border-radius: 5px;
+  width: 80%;
+  color: white;
+  box-shadow: 0px 0px 20px rgb(149, 247, 149);
+}
+
+#w:hover {
+  box-shadow: 0 0 10px 2px lime;
+  transform: scale(1.05);
+}
+
+#l:hover {
+  box-shadow: 0 0 10px 2px red;
+  transform: scale(1.05);
+}
+
+.resultM {
+  font-size: 18px;
+  margin-top: 15px;
+  text-align: center;
+  color: black;
+  font-family: 'Pixelify Sans', sans-serif;
+}
+
+@media (max-width: 500px) {
+  .content {
+    margin: -2%;
+    width: 95%;
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-top: 10px;
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  #join, #w, #l, #lb {
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  #lb {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+}
+</style>
+
+   
+</head>
+<body>
+
+    <div class="content">
+  <h1 class="title">✨<b>The Liar Game</b>✨</h1>
+
+  <div class="center">
+    <div class="row">
+      <input id="gameID" placeholder="Enter Game ID" />
+      <input id="playerName" placeholder="Enter Your Name" />
+    </div>
+
+
+    <button id="join" onclick="joinGame()">Join</button>
+
+    <div id="status-message"></div>
+
+    <div class="ans">
+      <p id="role" style="font-family: 'Pixelify Sans', sans-serif;"></p>
+      <p id="word"></p>
+      <div id="feedback-buttons" style="display:none;"> 
+    <button id='w' onclick="submitResult('won')"><b>Won</b></button> <br> <br>
+    <button id='l'onclick="submitResult('lost')"><b>Lost</b></button> <br>
+    <div id="result" class="resultM"></div> <br>
+   <button id='lb' onclick="lb()">Leaderboard</button>
+  </div>
+    </div>
+  </div>
+</div>
+
+
+    
+    
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+  const socket = io();
+
+  function joinGame() {
+    const game_id = document.getElementById('gameID').value;
+    const player_name = document.getElementById('playerName').value;
+
+    if (!game_id || !player_name) return alert("Enter both Game ID and Player Name");
+
+    socket.emit('join_game', { game_id, player_name });
+  }
+
+  function submitResult(result) {
+    const player_name = document.getElementById("playerName").value;
+    const game_id = document.getElementById("gameID").value;
+
+    if (!player_name || !game_id) return alert("Missing Game ID or Player Name");
+
+    socket.emit('submit_result', {
+      game_id,
+      player_name,
+      result
+    });
+
+    const resultMessage = document.getElementById('result');
+    if (result === 'won') {
+      resultMessage.textContent = "🥳 Congratulations! Please wait for the host to begin the next game!";
+    } else {
+      resultMessage.textContent = "❌ Paravala. Better luck next time 😊 Please wait for the host to begin the next game!";
+    }
+
+    document.getElementById('w').disabled = true;
+    document.getElementById('l').disabled = true;
+  }
+
+  function lb() {
+    const gameId = document.getElementById("gameID").value.trim();
+    if (gameId) {
+      const url = `/leaderboard?gameid=${encodeURIComponent(gameId)}`;
+      window.open(url, '_blank');
+    } else {
+      alert("Please enter a Game ID.");
+    }
+  }
+
+  socket.on('player_joined', (data) => {
+    const msg = document.getElementById('status-message');
+    if (msg) msg.innerText = "Waiting for host to start the game...";
+  });
+
+  socket.on('join_error', (data) => {
+    alert(data.message);
+  });
+
+  socket.on('role_assigned', (data) => {
+    document.querySelector('.row').style.display = "none";
+    document.getElementById('join').style.display = "none";
+    document.getElementById('status-message').innerText = "";
+
+    document.getElementById('role').innerHTML =
+      data.role === "liar"
+        ? "<h1 style='color:red; font-size: 45px;'>LIAR ❌</h1>"
+        : "<h1 style='color:green; font-size: 45px;'>PLAYER ✅</h1>";
+
+    document.getElementById('feedback-buttons').style.display = "block";
+    document.getElementById('w').disabled = false;
+    document.getElementById('l').disabled = false;
+
+    if (data.word) {
+      document.getElementById('word').innerHTML =
+        "Your word: <br><h1 style='color: black; font-family: Segoe UI, Arial, sans-serif;'>" +
+        data.word + "</h1>";
+    } else {
+      document.getElementById('word').innerHTML = "";
+    }
+  });
+
+  socket.on('next_game_started', () => {
+    document.getElementById('result').textContent = "";
+    document.getElementById('w').disabled = false;
+    document.getElementById('l').disabled = false;
+  });
+
+ 
+</script>
+</body>
+</html>
