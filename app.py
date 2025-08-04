@@ -1,3 +1,5 @@
+import eventlet
+eventlet.monkey_patch()
 
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit, join_room, leave_room
@@ -103,14 +105,32 @@ def start_game(data):
 def next_game(data):
     game_id = data['game_id']
     game = games.get(game_id)
-    if game and request.sid == game['host']:
+
+    print(f"[NEXT GAME] Attempting to start next round for game ID: {game_id}")
+
+    if not game:
+        print(f"[ERROR] Game ID {game_id} not found!")
+        return
+
+    if not game.get("players"):
+        print(f"[ERROR] No players found in game {game_id}")
+        return
+
+    print(f"[DEBUG] Players in game {game_id}: {list(game['players'].keys())}")
+
+    if request.sid == game.get('host'):
         game['liar'] = random.choice(list(game['players'].keys()))
         game['word'] = random.choice(WORDS)
         for sid in game['players']:
             if sid == game['liar']:
+                print(f"[EMIT] Sending 'liar' role to: {sid}")
                 emit('role_assigned', {'role': 'liar'}, room=sid)
             else:
+                print(f"[EMIT] Sending word '{game['word']}' to: {sid}")
                 emit('role_assigned', {'role': 'word', 'word': game['word']}, room=sid)
+    else:
+        print(f"[WARNING] SID {request.sid} attempted to start next round but is not host.")
+
 
 @socketio.on('end_game')
 def end_game(data):
